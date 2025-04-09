@@ -1,8 +1,8 @@
 
-### Neural Network Optimizations and Embeddings
+##Neural Network Optimizations and Embeddings
 
 
-This repository contains custom implementations of frequency-adaptive optimization algorithms rotary positional embeddings and attentions for transformers and tranformer-like architectures that are nlp/asr focused. And a few other things. These naturally lend themselves to vision and multimodal. Everything here is in a forever wip state and tends to be buggy. 
+This repository contains custom implementations of frequency-adaptive optimization algorithms n-dimensional rotary positional embeddings and attentions for transformers and tranformer-like architectures that are nlp/asr focused. And a few other things. These naturally lend themselves to vision and multimodal. Everything here is in a forever wip state and tends to be buggy. 
 
 I stress tranformer-like. 
 
@@ -144,12 +144,14 @@ class FrequencyHandler:
     scheduler = FAMScheduler(optimizer, warmup_epochs=5, max_epochs=100)
  ```
  
- 1. FAM's frequency-adaptive momentum significantly reduces training instability, particularly for attention layers
- 2. 15-30% faster convergence compared to Adam in transformer models
- 3. 3D rotary embeddings provide better sequence position understanding for long sequences
- 4. Parameter-specific handling reduces overall computation while improving results
  
 Attention mechanisms for neural language models and multimodal systems. 
+Different variations of your standard multihead attention block i've created for projects. Some are almost identical to one another with slight tweaks while some are wild abominations straying so far as to not be be recognized as a transformer.. 
+A diffused connected multiblock across several layers adaptly named wormattention. 
+An attention that can decide to skip passing information. 
+A multihead that is modeled after a myelinated axon replete with nodes of Ranvier cleverly named.. myelinatedLayer :P . 
+A lot of the blocks are connected and are not stand alone as-is but most are modular and can stand alone.. many drop-in replacements.
+All work.. Some well, some not so well.. Some ideas are just bad ideas.
  
  1. Adaptive Span Attention
 ```python
