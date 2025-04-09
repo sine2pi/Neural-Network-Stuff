@@ -176,11 +176,120 @@ A few example snippets:
  Dynamic adjustment of attention span based on content, optimizing computation while preserving modeling capacity. Effective for long sequences where full attention is unnecessary.
  
  2. MyelinatedLayer
-```python
-        class MyelinatedLayer(BaseAttention):
-            def __init__(self, dims, head, layerA=3, sparsity_threshold=0.1, max_dist=512):
-```
     Bio-inspired architecture with dynamic information routing
+```python
+
+class MyelinatedLayer(BaseAttention):
+    def __init__(self, dims, head, layerA=3, sparsity_threshold=0.1, max_dist=512):
+        super().__init__(dims, head, max_dist)
+        self.layers = nn.ModuleList()
+        self.layerA = layerA
+        self.sparsity_threshold = sparsity_threshold
+        self.max_dist = max_dist
+        
+        self.node_predictors = nn.ModuleList([
+            nn.Sequential(LayerNorm(dims),
+                        Linear(dims, 1),
+                        nn.Sigmoid()) for _ in range(layerA)])
+        
+        for i in range(layerA):
+            self.layers.append(nn.ModuleDict({
+                'ln': LayerNorm(dims),
+                'gate': nn.Sequential(Linear(dims, 1), nn.Sigmoid()),
+                'adapter': Linear(dims, dims) if i % 2 == 0 else None
+            }))
+        self.policy_net = nn.Sequential(Linear(dims, 128), nn.ReLU(), Linear(128, 3))
+        self.jump_weights = nn.Parameter(torch.tensor([0.1, 0.05, 0.01]))
+        
+        mlp = dims * 4
+        self.mlp_gate = nn.Sequential(Linear(dims, 1), nn.Sigmoid())
+        self.mlp = nn.Sequential(Linear(dims, mlp), nn.GELU(), Linear(mlp, dims))
+        self.mlp_ln = LayerNorm(dims)
+        
+        self.working_memory = nn.Parameter(torch.zeros(1, 1, dims))
+        self.memory_gate = nn.Sequential(Linear(dims, 1), nn.Sigmoid())
+        self.last_memory_gate_values = None
+
+    def compute_attention(self, norm_x, mask=None, kv_cache=None, is_causal=True):
+        """Compute attention with adaptive span and content-dependent updates."""
+        batch, ctx = norm_x.shape[:2]
+        
+        q = norm_x.view(batch, ctx, self.head, -1).transpose(1, 2)
+        k = norm_x.view(batch, ctx, self.head, -1).transpose(1, 2)
+        v = norm_x.view(batch, ctx, self.head, -1).transpose(1, 2)
+
+        attn_output, _ = calculate_attention(q, k, v, mask, 1.0, BaseAttention.use_sdpa, is_causal=is_causal)
+        
+        attn_output = attn_output.transpose(1, 2).contiguous().view(batch, ctx, -1)
+        return attn_output
+
+    def predict_node_importance(self, x, layer_idx):
+        """Dynamically determine if processing should occur at this node."""
+        importance = self.node_predictors[layer_idx](x)
+        return (importance > self.sparsity_threshold).float()
+
+    def decide_jump(self, policy, jump_weights, i, layerA, x, original_x, working_memory):
+        """Decide whether to jump layers based on the policy network."""
+        jump_prob = policy[:, 1] if i < layerA - 1 else torch.zeros_like(policy[:, 1])
+        should_jump = (torch.rand_like(jump_prob) < jump_prob).any()
+        if should_jump:
+            jump_length = torch.multinomial(policy, 1)[:, 0].max().item() + 1
+            i_next = min(i + jump_length, layerA - 1)
+            skip_weight = jump_weights[min(jump_length - 1, 2)]
+            x = x + skip_weight * original_x + (1 - skip_weight) * working_memory
+            return x, i_next
+        return x, i + 1
+
+    def forward(self, x, xa=None, mask=None, kv_cache=None, is_causal=True):
+        batch, ctx = x.shape[:2]
+        working_memory = self.working_memory.expand(batch, -1, -1)
+        original_x = x
+        pooled_representation = x.mean(dim=1, keepdim=False)
+        policy_logits = self.policy_net(pooled_representation)
+        policy = F.softmax(policy_logits, dim=-1)
+        jump_history = []
+        memory_gate = torch.zeros(batch, 1, 1, device=x.device)
+        
+        i = 0
+        while i < self.layerA:
+            layer = self.layers[i]
+            node_importance = self.predict_node_importance(x, i)
+            print(f"Node importance (Layer {i}): {node_importance}")
+
+            if node_importance.mean() < 0.2 and i > 0:
+                i += 1
+                jump_history.append(i)
+                continue
+            norm_x = layer['ln'](x)
+            attn_mask = mask * node_importance.squeeze(-1).unsqueeze(1) if mask is not None else node_importance.squeeze(-1).unsqueeze(1)
+            
+            if node_importance.mean() > 0.3:
+                attn_output = self.compute_attention(norm_x, mask=attn_mask, kv_cache=kv_cache)
+                print(f"Attention output (Layer {i}): {attn_output}")
+                
+                if layer['adapter'] is not None:
+                    attn_output = layer['adapter'](attn_output)
+                gate_value = layer['gate'](norm_x)
+                x = x + gate_value * attn_output
+                print(f"Updated representation (Layer {i}): {x}")
+                
+                memory_gate = self.memory_gate(x.mean(dim=1, keepdim=True))
+                mean_x = x.mean(dim=1, keepdim=True)
+                working_memory = memory_gate * working_memory + (1 - memory_gate) * mean_x
+                print(f"Memory gate value: {memory_gate}")
+            
+            x, i = self.decide_jump(policy, self.jump_weights, i, self.layerA, x, original_x, working_memory)
+            jump_history.append(i)
+
+        self.last_memory_gate_values = memory_gate.detach().clone()
+        print(f"Jump history: {jump_history}")
+        mlp_importance = self.mlp_gate(x)
+        mlp_output = self.mlp(self.mlp_ln(x))
+        x = x + mlp_importance * mlp_output
+        print(f"Final output: {x}")
+        return x
+```
+
 
 
 Neural-inspired architecture that models the biological concept of myelin sheaths and nodes of Ranvier, enabling targeted computation and dynamic layer traversal based on content importance. Features reinforcement learning-based policy for optimized layer skipping.
