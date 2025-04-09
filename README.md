@@ -593,7 +593,7 @@ class FAMScheduler2(torch.optim.lr_scheduler._LRScheduler):
                    for base_lr in self.base_lrs]
 ```
  
- n-Dimensional Rotary Embedding (Givens-Quaternion with regular RoPE fall back)
+#### n-Dimensional Rotary Embedding (Givens-Quaternion with regular RoPE fall back)
 
 what my AI has to say about it...
 
@@ -603,7 +603,7 @@ Another unique aspect is the design flexibility, as it allows for adjustable fre
 
 They either sound like they are making a pitch on Shark Tank, or they sounds like they are answering a question on stack exchange .. never in the middle.
 
-- Incorporates quaternion rotations (`q_rotation`), enabling transformations in three-dimensional space by utilizing normalized unit vectors and angle-based adjustments with added compatibility for quaternion-based rotational enhancements in high-dimensional contexts... 4d 6d 8d etcetc
+- Incorporates quaternion rotations (`q_rotation`), enabling transformations in three-dimensional space by utilizing normalized unit vectors and angle-based adjustments with added compatibility for quaternion-based rotational enhancements in high-dimensional contexts. 4d, 6d, 8d, ... etc.
 
 - Maps high-dimensional embeddings to lower dimensions before rotation and reconstructs them afterward. This process uses singular value decomposition (SVD) for orthogonal initialization, aimed at maintaining numerical stability. Frequency-based encoding (`freqs`) supports learned parameters, allowing dynamic representation adjustments.
  
