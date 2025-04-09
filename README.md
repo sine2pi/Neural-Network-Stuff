@@ -31,7 +31,7 @@ Layer variance, (just like mother nature intended).
 
 ```
 
-The full code for each snippet can found here can be found somewhere on this github. I'm an idea person so more often than not things I create might not be entirely pratical? but every once in awhile something kind of works so I post some of those here.  
+The full code for each snippet can found here can be found somewhere on this github. These are ideas and more often than not things I create might not be entirely pratical. Every once in awhile something kind of works so I post some of those here.  
 
 Frequency-Adaptive Momentum (FAM) Optimizer
 
