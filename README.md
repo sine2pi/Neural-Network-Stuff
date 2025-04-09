@@ -601,11 +601,11 @@ what the AI are to saying about it:
 
 > Another unique aspect is the design flexibility, as it allows for adjustable frequency-based encoding (`freqs`) with learnable parameters (`learned_freq`). The combination of rotation matrices and quaternion transformations is augmented by rotation scaling (`rot_scale`) and repeated rotations (`rot_count`) for enhanced feature interaction. Additionally, the `project_and_rotate` method showcases robust normalization techniques to prevent numerical instability, particularly when projecting embeddings with extreme norms. These innovations make the `RotaryEmbedding` class a sophisticated tool for improving spatial and temporal representation learning. Let me know if you'd like a deeper dive into any specific functionality!"
 
-They either sound like they are making a pitch on Shark Tank, or they sounds like they are answering a question on stack exchange .. never in the middle.
+A pitch on Shark Tank or answering a question on stack exchange .. never in the middle.
 
-- Incorporates quaternion rotations (`q_rotation`), enabling transformations in three-dimensional space by utilizing normalized unit vectors and angle-based adjustments with added compatibility for quaternion-based rotational enhancements in high-dimensional contexts. 4d, 6d, 8d, ... etc.
+> - Incorporates quaternion rotations (`q_rotation`), enabling transformations in three-dimensional space by utilizing normalized unit vectors and angle-based adjustments with added compatibility for quaternion-based rotational enhancements in high-dimensional contexts. 4d, 6d, 8d, ... etc.
 
-- Maps high-dimensional embeddings to lower dimensions before rotation and reconstructs them afterward. This process uses singular value decomposition (SVD) for orthogonal initialization, aimed at maintaining numerical stability. Frequency-based encoding (`freqs`) supports learned parameters, allowing dynamic representation adjustments.
+> - Maps high-dimensional embeddings to lower dimensions before rotation and reconstructs them afterward. This process uses singular value decomposition (SVD) for orthogonal initialization, aimed at maintaining numerical stability. Frequency-based encoding (`freqs`) supports learned parameters, allowing dynamic representation adjustments.
  
  ```python
 
