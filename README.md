@@ -462,6 +462,7 @@ class EmbeddingFrequencyHandler(FrequencyHandler):
   Dynamically adjusts momentum coefficients based on gradient frequency characteristics:
  - Higher momentum for high-frequency noise (smoother updates)
  - Lower momentum for meaningful low-frequency components (faster learning)
+ - Fall back to regular Maxfactor
  
  4. Debug and Monitoring Tools
  
