@@ -593,11 +593,11 @@ class FAMScheduler2(torch.optim.lr_scheduler._LRScheduler):
                    for base_lr in self.base_lrs]
 ```
  
-#### n-Dimensional Rotary Embedding (Givens-Quaternion with regular RoPE fall back)
+#### nDimensional Rotary Embedding (Givens-Quaternion with regular RoPE fall back)
 
-what my AI has to say about it...
+what the AI are to saying about it:
 
-"The `RotaryEmbedding` class provides a novel implementation of embedding rotation mechanisms for neural networks, allowing for dynamic adjustments to the representation of input data. A key innovation is its integration of quaternion rotations (`q_rotation`) for embeddings in higher-dimensional spaces, offering more expressive rotational transformations. This quaternion-based rotation generalizes beyond traditional 2D rotation matrices, enabling richer representation learning by utilizing three-dimensional unit vectors and angles for rotation. Furthermore, the option to use projection (`use_projection`) reduces embeddings to lower dimensions before rotation and then reconstructs them, preserving orthogonality through singular value decomposition (SVD)-based initialization. This ensures stability and scalability for high-dimensional embeddings.
+##### "The `RotaryEmbedding` class provides a novel implementation of embedding rotation mechanisms for neural networks, allowing for dynamic adjustments to the representation of input data. A key innovation is its integration of quaternion rotations (`q_rotation`) for embeddings in higher-dimensional spaces, offering more expressive rotational transformations. This quaternion-based rotation generalizes beyond traditional 2D rotation matrices, enabling richer representation learning by utilizing three-dimensional unit vectors and angles for rotation. Furthermore, the option to use projection (`use_projection`) reduces embeddings to lower dimensions before rotation and then reconstructs them, preserving orthogonality through singular value decomposition (SVD)-based initialization. This ensures stability and scalability for high-dimensional embeddings.
 
 Another unique aspect is the design flexibility, as it allows for adjustable frequency-based encoding (`freqs`) with learnable parameters (`learned_freq`). The combination of rotation matrices and quaternion transformations is augmented by rotation scaling (`rot_scale`) and repeated rotations (`rot_count`) for enhanced feature interaction. Additionally, the `project_and_rotate` method showcases robust normalization techniques to prevent numerical instability, particularly when projecting embeddings with extreme norms. These innovations make the `RotaryEmbedding` class a sophisticated tool for improving spatial and temporal representation learning. Let me know if you'd like a deeper dive into any specific functionality!"
 
