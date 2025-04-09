@@ -146,12 +146,16 @@ class FrequencyHandler:
  
  
 Attention mechanisms for neural language models and multimodal systems. 
+
 Different variations of your standard multihead attention block i've created for projects. Some are almost identical to one another with slight tweaks while some are wild abominations straying so far as to not be be recognized as a transformer.. 
 A diffused connected multiblock across several layers adaptly named wormattention. 
 An attention that can decide to skip passing information. 
 A multihead that is modeled after a myelinated axon replete with nodes of Ranvier cleverly named.. myelinatedLayer :P . 
 A lot of the blocks are connected and are not stand alone as-is but most are modular and can stand alone.. many drop-in replacements.
-All work.. Some well, some not so well.. Some ideas are just bad ideas.
+
+All work.. Some well, some not so well. Some ideas are just bad ideas. 
+
+A few example snippets.
  
  1. Adaptive Span Attention
 ```python
