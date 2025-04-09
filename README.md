@@ -1,5 +1,5 @@
 
-##Neural Network Optimizations and Embeddings
+#### Neural Network Optimizations and Embeddings
 
 
 This repository contains custom implementations of frequency-adaptive optimization algorithms n-dimensional rotary positional embeddings and attentions for transformers and tranformer-like architectures that are nlp/asr focused. And a few other things. These naturally lend themselves to vision and multimodal. Everything here is in a forever wip state and tends to be buggy. 
@@ -145,13 +145,18 @@ class FrequencyHandler:
  ```
  
  
-Attention mechanisms for neural language models and multimodal systems. 
+### Attention mechanisms for neural language models and multimodal systems. 
+(scrapped from my mess of work folders)
 
 Different variations of your standard multihead attention block i've created for projects. Some are almost identical to one another with slight tweaks while some are wild abominations straying so far as to not be be recognized as a transformer.. 
-A diffused connected multiblock across several layers adaptly named wormattention. 
-An attention that can decide to skip passing information. 
-A multihead that is modeled after a myelinated axon replete with nodes of Ranvier cleverly named.. myelinatedLayer :P . 
-A lot of the blocks are connected and are not stand alone as-is but most are modular and can stand alone.. many drop-in replacements.
+
+A diffused connected multiblock across several layers adaptly named wormattention...
+An attention that can decide not to pass information which feeds back weakening or strengthing the potential for future passes...
+A multihead that is modeled after a myelinated axon replete with nodes of Ranvier cleverly named.. myelinatedLayer :P ...
+other oddball ideas...
+
+A lot of the blocks are connected and are not stand alone as-is but most are modular and can be used in that manner.. many can be used as drop-in replacements for a standard pytorch multiheadattention block and can inherit from that if you dont mind the overhead. 
+
 
 All work.. Some well, some not so well. Some ideas are just bad ideas. 
 
